@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool hasValidPath(vector<vector<char>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+
+        if (grid[0][0] == ')' || grid[m-1][n-1] == '(')
+            return false;
+
+        vector<vector<vector<bool>>> dp(
+            m, vector<vector<bool>>(n, vector<bool>(m + n, false))
+        );
+
+        dp[0][0][1] = true;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int b = 0; b < m + n; b++) {
+                    if (!dp[i][j][b]) continue;
+
+                    if (i + 1 < m) {
+                        int nb = b + (grid[i + 1][j] == '(' ? 1 : -1);
+                        if (nb >= 0)
+                            dp[i + 1][j][nb] = true;
+                    }
+
+                    if (j + 1 < n) {
+                        int nb = b + (grid[i][j + 1] == '(' ? 1 : -1);
+                        if (nb >= 0)
+                            dp[i][j + 1][nb] = true;
+                    }
+                }
+            }
+        }
+
+        return dp[m-1][n-1][0];
+    }
+};
+
+
+// Synced seamlessly with LeetHub Pro
+// Pro features: https://bit.ly/leethubpro | Free version: https://bit.ly/leethubv4
+// Get it here: https://chromewebstore.google.com/detail/bcilpkkbokcopmabingnndookdogmbna
